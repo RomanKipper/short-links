@@ -1,11 +1,11 @@
 export interface TrackLinkClickAction {
     type: 'trackLinkClick';
-    link: string;
+    longUrl: string;
 }
 
-export default function trackLinkClick(link: string): TrackLinkClickAction {
+export default function trackLinkClick(longUrl: string): TrackLinkClickAction {
     return {
         type: 'trackLinkClick',
-        link
+        longUrl
     };
 }

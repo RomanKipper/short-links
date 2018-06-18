@@ -3,9 +3,10 @@
  * Encapsulate the exact format of a short link.
  */
 
-import * as lodash from 'lodash';
+import lodash from 'lodash';
 
 export function createShortLink(): string {
+    // For sake of simplicity, we don't test on collisions between generated tokens.
     const hexDigits = [
         'a', 'b', 'c', 'd', 'e', 'f',
         '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'

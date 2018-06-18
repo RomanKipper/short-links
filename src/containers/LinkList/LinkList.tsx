@@ -1,38 +1,59 @@
 import * as React from 'react';
+import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
+import State from '../../types/State';
+import * as actions from '../../actions';
 import NavLink from '../../components/NavLink';
-import ShortLink from '../../interfaces/ShortLink';
-import ListItem from '../../components/ShortLink';
+import Link from '../../types/Link';
+import ShortLink from '../../components/ShortLink';
 
 import './LinkList.less';
 
 interface Props {
-    links: ShortLink[];
+    links: Link[];
+    onLinkClick: (longUrl: string) => void;
+    onDeleteLink: (longUrl: string) => void;
 }
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: State) {
     return {
-        links: state.shortLinks.shortLinks
+        links: state.links
     };
 }
 
-class LinkList extends React.Component<Props> {
-    render() {
-        return (
-            <div className="link-list">
-                <h1 className="link-list__title">Короткие ссылки</h1>
-                <div className="link-list__list">
-                    {this.props.links.map(shortLink =>
-                        <ListItem key={shortLink.link} className="link-list__item" {...shortLink} />
-                    )}
-                </div>
-                <NavLink to="/" className="link-list__nav-link">
-                    Укоротить еще одну ссылку
-                </NavLink>
-            </div>
-        );
-    }
+function mapDispatchToProps(dispatch: Dispatch) {
+    return {
+        onLinkClick(longUrl: string) {
+            dispatch(actions.trackLinkClick(longUrl));
+        },
+        onDeleteLink(longUrl: string) {
+            dispatch(actions.deleteLink(longUrl));
+        }
+    };
 }
 
-export default connect(mapStateToProps)(LinkList);
+const LinkList: React.SFC<Props> = (props) => (
+    <div className="link-list">
+        <h1 className="link-list__title">
+            Короткие ссылки
+        </h1>
+        <div className="link-list__links">
+            {props.links.length > 0
+                ? props.links.map(link =>
+                    <ShortLink key={link.longUrl}
+                        className="link-list__item"
+                        {...link}
+                        onClick={() => props.onLinkClick(link.longUrl)}
+                        onDelete={() => props.onDeleteLink(link.longUrl)}
+                    />
+                ) : 'Ссылок пока нет'
+            }
+        </div>
+        <NavLink to="/" className="link-list__nav-link">
+            Укоротить еще одну ссылку
+        </NavLink>
+    </div>
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(LinkList);

@@ -1,11 +1,11 @@
 export interface DeleteLinkAction {
     type: 'deleteLink';
-    url: string;
+    longUrl: string;
 }
 
-export default function deleteLink(url: string): DeleteLinkAction {
+export default function deleteLink(longUrl: string): DeleteLinkAction {
     return {
         type: 'deleteLink',
-        url
+        longUrl
     };
 }

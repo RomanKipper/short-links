@@ -1,18 +1,6 @@
 .link-generator {
     width: 500px;
     margin: 150px auto;
-
-    .last-links {
-        margin-top: 40px;
-        padding: 20px;
-
-        border-radius: 5px;
-        background: white;
-
-        .short-link {
-            color: orange;
-        }
-    }
 }
 
 .link-generator__title {
@@ -21,49 +9,49 @@
     color: white;
 }
 
-.link-generator__input {
+.link-generator__form {
     display: flex;
     flex-flow: row nowrap;
 
     height: 60px;
     margin-top: 100px;
+}
 
-    input {
-        flex-grow: 1;
+.link-generator__link-input {
+    flex-grow: 1;
 
-        padding: 20px;
+    padding: 20px;
 
-        color: orangered;
-        border: none;
-        outline: none;
-        border-radius: 5px 0 0 5px;
+    color: orangered;
+    border: none;
+    outline: none;
+    border-radius: 5px 0 0 5px;
 
-        font-size: 16px;
+    font-size: 16px;
 
-        &:focus {
-            padding: 19px;
+    &:focus {
+        padding: 19px;
 
-            border: 1px solid orangered;
-        }
+        border: 1px solid orangered;
     }
+}
 
-    button {
-        width: 100px;
+.link-generator__submit-button {
+    width: 100px;
 
-        cursor: pointer;
-        text-transform: uppercase;
+    cursor: pointer;
+    text-transform: uppercase;
 
-        color: white;
-        border: none;
-        border-radius: 0 5px 5px 0;
-        outline: none;
-        background: orangered;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    outline: none;
+    background: orangered;
 
-        font-weight: bold;
+    font-weight: bold;
 
-        &:hover {
-            opacity: 0.8;
-        }
+    &:hover {
+        opacity: 0.8;
     }
 }
 
@@ -85,7 +73,7 @@
         text-align: left;
     }
 
-    .link-generator__input {
+    .link-generator__form {
         margin-top: 25px;
     }
 }

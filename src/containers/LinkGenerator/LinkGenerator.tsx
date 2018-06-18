@@ -1,79 +1,84 @@
 import * as React from 'react';
+import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import lodash from 'lodash';
 
+import * as actions from '../../actions';
+import State from '../../types/State';
 import NavLink from '../../components/NavLink';
-import { setLinkText } from '../../actions/setLinkText';
-import createShortLink from '../../actions/createShortLink';
-import trackShortLinkClick from '../../actions/trackShortLinkClick';
 
 import './LinkGenerator.less';
 
-export interface LinkGeneratorProps {
+interface Props {
     linkText: string;
-    lastLinks: any[];
-    onLinkChanged: (text: string) => void;
-    onCreateLink: (longLink: string) => void;
-    onLinkClicked: (link: string) => void;
+    isShortLink: boolean;
+    onChangeLink: (text: string) => void;
+    onShortenLink: (longUrl: string) => void;
+    onExit: () => void;
 }
 
-function manStateToProps(state: any) {
+function manStateToProps(state: State) {
     return {
         linkText: state.linkText,
-        lastLinks: state.shortLinks.lastShortLinks
-            .map((linkId: string) => lodash.find(state.shortLinks.shortLinks, { link: linkId }))
+        isShortLink: state.isShortLink
     };
 }
 
-function mapDispatchToProps(dispatch: any) {
+function mapDispatchToProps(dispatch: Dispatch) {
     return {
-        onLinkChanged(text: string) {
-            dispatch(setLinkText(text));
+        onChangeLink(text: string) {
+            dispatch(actions.setLinkText(text));
         },
-        onCreateLink(longLink: string) {
-            dispatch(createShortLink(longLink))
+        onShortenLink(longUrl: string) {
+            dispatch(actions.addLink(longUrl))
         },
-        onLinkClicked(link: string) {
-            dispatch(trackShortLinkClick(link))
+        onExit() {
+            dispatch(actions.setLinkText(''));
         }
     };
 }
 
-function LinkGenerator(props: LinkGeneratorProps) {
-    return (
-        <div className="link-generator">
-            <h1 className="link-generator__title">
-                Сервис коротких ссылок
-            </h1>
-            <div className="link-generator__input">
-                <input type="text"
-                    value={props.linkText}
-                    placeholder="Вставьте ссылку"
-                    onChange={event => props.onLinkChanged(event.target.value)}>        
-                </input>
-                <button type="button"
-                    onClick={() => props.onCreateLink(props.linkText)}>Укоротить</button>
+class LinkGenerator extends React.Component<Props> {
+    render() {
+        return (
+            <div className="link-generator">
+                <h1 className="link-generator__title">
+                    Сервис коротких ссылок
+                </h1>
+                <form className="link-generator__form" onSubmit={this.onSubmitForm}>
+                    <input className="link-generator__link-input"
+                        type="text"
+                        value={this.props.linkText}
+                        placeholder="Вставьте ссылку"
+                        onChange={this.onChangeLink}>
+                    </input>
+                    <button className="link-generator__submit-button"
+                        type="submit">
+                        Укоротить
+                    </button>
+                </form>
+                <NavLink to="/links" className="link-generator__nav-link">
+                    Смотреть все ссылки
+                </NavLink>
             </div>
-            {props.lastLinks.length > 0 &&
-                <div className="last-links">
-                    {props.lastLinks.map(link =>
-                        <div className="link" key={link.link}>
-                            <span className="long-link">{link.originalLink}</span>
-                            {' translated to '}
-                            <a className="short-link"
-                                href={link.originalLink} target="_blank"
-                                onClick={() => props.onLinkClicked(link.link)}>
-                                {link.link}
-                            </a>
-                        </div>
-                    )}
-                </div>
-            }
-            <NavLink to="/links" className="link-generator__nav-link">
-                Смотреть все ссылки
-            </NavLink>
-        </div>
-    );
+        );
+    }
+
+    componentWillUnmount() {
+        this.props.onExit();
+    }
+
+    onChangeLink = (event: React.FormEvent<HTMLInputElement>) => {
+        this.props.onChangeLink(event.currentTarget.value);
+    }
+
+    onSubmitForm = (event: React.SyntheticEvent) => {
+        event.preventDefault();
+        if (this.props.isShortLink) {
+            alert('Эта ссылка уже короткая');
+        } else {
+            this.props.onShortenLink(this.props.linkText);
+        }
+    }
 }
 
 export default connect(manStateToProps, mapDispatchToProps)(LinkGenerator);

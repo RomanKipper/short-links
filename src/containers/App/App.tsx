@@ -3,33 +3,29 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, Store, Middleware } from 'redux';
 import { HashRouter, Switch, Route } from 'react-router-dom';
 
-import { Action } from '../Action';
-import mainReducer from '../../reducers/mainReducer';
-import ShortLink from '../interfaces/ShortLink';
 import State from '../../types/State';
-import LinkGenerator from './LinkGenerator';
-import LinkList from './LinkList';
+import mainReducer from '../../reducers/mainReducer';
+import LinkGenerator from '../LinkGenerator';
+import LinkList from '../LinkList';
 
 import './App.less';
 
-const STORAGE_KEY = 'shortLinks';
+const STORAGE_KEY = 'short-links:links';
 
 const initialState: State = {
+    links: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
     linkText: '',
-    shortLinks: {
-        shortLinks: JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'),
-        lastShortLinks: []
-    }
+    isShortLink: false
 };
 
 const linkSaver: Middleware<{}, State> = ({ getState }) => {
     return next => action => {
-        const prevShortLinks = getState().shortLinks.shortLinks;
+        const prevLinks = getState().links;
         const returnValue = next(action);
-        const nextShortLinks = getState().shortLinks.shortLinks;
-        if (nextShortLinks !== prevShortLinks) {
+        const nextLinks = getState().links;
+        if (nextLinks !== prevLinks) {
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(nextShortLinks));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(nextLinks));
             } catch (error) {
                 console.log(error);
             }
@@ -38,9 +34,9 @@ const linkSaver: Middleware<{}, State> = ({ getState }) => {
     };
 }
 
-const store: Store<State> = createStore(mainReducer, initialState as any, applyMiddleware(linkSaver));
+const store: Store<State> = createStore(mainReducer, initialState, applyMiddleware(linkSaver));
 
-const App: React.SFC<{}> = (props) => (
+const App: React.SFC = () => (
     <Provider store={store}>
         <HashRouter>
             <Switch>
