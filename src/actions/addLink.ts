@@ -1,4 +1,3 @@
-import { NullAction } from '../types/Action';
 import * as utils from '../utils';
 
 export interface AddLinkAction {
@@ -7,15 +6,10 @@ export interface AddLinkAction {
     longUrl: string;
 }
 
-export default function addLink(url: string): AddLinkAction | NullAction {
-    if (!url.match(/^https?:\/\//)) {
-        return {
-            type: 'null'
-        };
-    }
+export default function addLink(longUrl: string): AddLinkAction {
     return {
         type: 'addLink',
         shortUrl: utils.createShortLink(),
-        longUrl: url
+        longUrl
     };
 }

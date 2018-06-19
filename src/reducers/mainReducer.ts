@@ -3,11 +3,11 @@ import lodash from 'lodash';
 import Action from '../types/Action';
 import State from '../types/State';
 import linksReducer from './linksReducer';
-import * as utils from '../utils';
 
 const initialState: State = {
     links: [],
     linkText: '',
+    isValidLink: false,
     isShortLink: false
 };
 
@@ -17,7 +17,8 @@ export default function mainReducer(state: State = initialState, action: Action)
             return {
                 ...state,
                 linkText: action.text,
-                isShortLink: utils.isShortLink(action.text)
+                isValidLink: /^https?:\/\/[\w.-]+\.[\w]+\/?/.test(action.text),
+                isShortLink: lodash.some(state.links, { shortUrl: action.text })
             };
         case 'addLink':
             const nextLinks = linksReducer(state.links, action);

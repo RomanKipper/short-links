@@ -9,7 +9,6 @@ interface Props {
     longUrl: string;
     clickCount: number;
     className: string;
-    onClick: () => void;
     onDelete: () => void;
 }
 
@@ -22,8 +21,7 @@ const ShortLink: React.SFC<Props> = (props: Props) => (
         <div className="short-link__short-one">
             <div className="short-link__left-side">
                 <a className="short-link__short-link"
-                    href={props.longUrl} target="_blank"
-                    onClick={props.onClick}>
+                    href={props.shortUrl} target="_blank">
                     {props.shortUrl}
                 </a>
                 <button className="short-link__delete-button" type="button" onClick={props.onDelete}>

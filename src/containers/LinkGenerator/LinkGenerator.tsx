@@ -10,6 +10,7 @@ import './LinkGenerator.less';
 
 interface Props {
     linkText: string;
+    isValidLink: boolean;
     isShortLink: boolean;
     onChangeLink: (text: string) => void;
     onShortenLink: (longUrl: string) => void;
@@ -19,6 +20,7 @@ interface Props {
 function manStateToProps(state: State) {
     return {
         linkText: state.linkText,
+        isValidLink: state.isValidLink,
         isShortLink: state.isShortLink
     };
 }
@@ -73,7 +75,9 @@ class LinkGenerator extends React.Component<Props> {
 
     onSubmitForm = (event: React.SyntheticEvent) => {
         event.preventDefault();
-        if (this.props.isShortLink) {
+        if (!this.props.isValidLink) {
+            alert('Пожалуйста, введите правильную ссылку');
+        } else if (this.props.isShortLink) {
             alert('Эта ссылка уже короткая');
         } else {
             this.props.onShortenLink(this.props.linkText);

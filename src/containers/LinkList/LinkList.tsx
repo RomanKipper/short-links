@@ -12,7 +12,6 @@ import './LinkList.less';
 
 interface Props {
     links: Link[];
-    onLinkClick: (longUrl: string) => void;
     onDeleteLink: (longUrl: string) => void;
 }
 
@@ -24,9 +23,6 @@ function mapStateToProps(state: State) {
 
 function mapDispatchToProps(dispatch: Dispatch) {
     return {
-        onLinkClick(longUrl: string) {
-            dispatch(actions.trackLinkClick(longUrl));
-        },
         onDeleteLink(longUrl: string) {
             dispatch(actions.deleteLink(longUrl));
         }
@@ -44,7 +40,6 @@ const LinkList: React.SFC<Props> = (props) => (
                     <ShortLink key={link.longUrl}
                         className="link-list__item"
                         {...link}
-                        onClick={() => props.onLinkClick(link.longUrl)}
                         onDelete={() => props.onDeleteLink(link.longUrl)}
                     />
                 ) : 'Ссылок пока нет'
